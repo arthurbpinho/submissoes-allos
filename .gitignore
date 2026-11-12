@@ -1,0 +1,36 @@
+# Dependências e build
+node_modules/
+client/node_modules/
+client/dist/
+
+# Segredos: nunca no repositório. Em produção, as variáveis ficam no Railway.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Dados de runtime: o banco SQLite (contas, textos, avaliações, e-mails).
+# Em produção vive no volume (DATA_DIR=/data); em dev, em server/data/.
+server/data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+
+# PROMPTS: nunca no repositório. Os arquivos ficam em .prompts/ só na máquina
+# local; no primeiro boot são semeados no banco, e em produção sobem pelo painel
+# (Admin → Prompts), como no allosvendas.
+.prompts/
+.prompt/
+
+# Diversos
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.idea/
+.claude/
+coverage/
