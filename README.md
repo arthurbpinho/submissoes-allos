@@ -103,6 +103,25 @@ Rodar os textos de teste com perfil conhecido (bonito e vazio, empírico sem bri
 hermético…) e medir **consistência** (mesmo texto duas vezes: no máximo um nível de diferença),
 **inflação** (com texto de aluno, a maioria entre 1 e 2) e **peso efetivo** dos terços.
 
+## Produção (Railway)
+
+Projeto **submissoes-allos** no Railway, serviço ligado ao GitHub (`arthurbpinho/submissoes-allos`,
+branch `main`): cada push faz deploy. Volume em `/data` (o banco SQLite mora lá). **Uma réplica só.**
+
+Variáveis do serviço: `NODE_ENV=production`, `DATA_DIR=/data`, `JWT_SECRET`, `ADMIN_INITIAL_PASSWORD`
+(vale só no primeiro boot; veja o valor em Railway → Variables), `APP_BASE_URL`, `OPENAI_MODEL`,
+`AVALIACAO_MODO=batch`, `AVALIADOR_EFFORT`, `SINTETIZADOR_EFFORT`, `AVALIACAO_INTERVALO_MS`,
+`BATCH_MAX_SUBMISSOES`, `MAIL_FROM_NAME`. Falta pôr `OPENAI_API_KEY`; **sem ela, em produção a
+avaliação fica desligada** (os textos esperam na fila; nunca sai nota inventada). Depois, as
+variáveis `GRAPH_*` e `MAIL_FROM` do Microsoft Entra para os e-mails saírem.
+
+**Prompts em produção** (não vão para o git): suba os arquivos de `.prompts/` pelo painel
+(Admin → Prompts) ou, de uma vez, com o script, que usa o mesmo caminho do painel:
+
+```bash
+ADMIN_SENHA='senha-do-admin' node scripts/subir-prompts.js https://submissao.allos.org.br
+```
+
 ## Estrutura
 
 ```
@@ -115,6 +134,7 @@ server/avaliacao.js    fila, Batch API, modo direto/demonstração, varredor
 server/anotacoes.js    validação e reposicionamento das marcações (puro)
 server/email.js        Microsoft Graph + modelos de e-mail
 server/servicos.js     eventos, caixa de saída, erros, visões
+scripts/subir-prompts.js  envia .prompts/ para uma instância no ar (Admin → Prompts por API)
 client/src/pages/      site, painel do autor, correção; admin/ com as telas do painel
 tests/                 vitest: regras, pipeline, anotações, fluxo completo e lote (OpenAI falsa)
 ```
@@ -129,5 +149,5 @@ tests/                 vitest: regras, pipeline, anotações, fluxo completo e l
 - [ ] Autenticação do Microsoft Entra para o envio de e-mail (variáveis `GRAPH_*` e `MAIL_FROM`)
 - [ ] Calibrar com os textos de teste do guia e definir o limiar de descarte no primeiro lote real
 - [ ] Relatório de similaridade e checagem de DOI como insumos do critério 10 (sugestão do guia)
-- [ ] Deploy no Railway (volume em `/data`, `DATA_DIR=/data`, `NODE_ENV=production`, Node ≥ 22.5)
+- [ ] Railway: `OPENAI_API_KEY`, domínio `submissao.allos.org.br` e migrar o `railway.json` para o formato novo antes de 01/12/2026 (`railway config migrate`)
 - [ ] Recuperação de senha do autor (precisa do e-mail funcionando)
