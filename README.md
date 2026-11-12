@@ -108,6 +108,12 @@ hermético…) e medir **consistência** (mesmo texto duas vezes: no máximo um 
 Projeto **submissoes-allos** no Railway, serviço ligado ao GitHub (`arthurbpinho/submissoes-allos`,
 branch `main`): cada push faz deploy. Volume em `/data` (o banco SQLite mora lá). **Uma réplica só.**
 
+A infraestrutura está descrita em `.railway/railway.ts` (o formato novo do Railway, que substitui o
+`railway.json`). Ele **não** é aplicado no push: mude o arquivo, rode `railway config plan` para ver
+o que mudaria e só então `railway config apply`. Cuidado: o apply **apaga o que não está no
+arquivo**. As variáveis estão todas como `preserve()` (o valor fica só no painel, nunca no
+repositório, que é público); ao criar uma variável nova no painel, acrescente o nome no arquivo.
+
 Variáveis do serviço: `NODE_ENV=production`, `DATA_DIR=/data`, `JWT_SECRET`, `ADMIN_INITIAL_PASSWORD`
 (vale só no primeiro boot; veja o valor em Railway → Variables), `APP_BASE_URL`, `OPENAI_MODEL`,
 `AVALIACAO_MODO=batch`, `AVALIADOR_EFFORT`, `SINTETIZADOR_EFFORT`, `AVALIACAO_INTERVALO_MS`,
@@ -149,5 +155,5 @@ tests/                 vitest: regras, pipeline, anotações, fluxo completo e l
 - [ ] Autenticação do Microsoft Entra para o envio de e-mail (variáveis `GRAPH_*` e `MAIL_FROM`)
 - [ ] Calibrar com os textos de teste do guia e definir o limiar de descarte no primeiro lote real
 - [ ] Relatório de similaridade e checagem de DOI como insumos do critério 10 (sugestão do guia)
-- [ ] Railway: `OPENAI_API_KEY`, domínio `submissao.allos.org.br` e migrar o `railway.json` para o formato novo antes de 01/12/2026 (`railway config migrate`)
+- [ ] Railway: `OPENAI_API_KEY` (o nome já está no `.railway/railway.ts`; é só pôr o valor no painel)
 - [ ] Recuperação de senha do autor (precisa do e-mail funcionando)

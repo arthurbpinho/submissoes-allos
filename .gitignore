@@ -34,3 +34,6 @@ npm-debug.log*
 .idea/
 .claude/
 coverage/
+
+# Planos do Railway (railway config plan --out): artefato local, não versionar.
+railway-plan*.json
